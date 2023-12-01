@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/images/favicon-32x32.png"
+    />
+
+    <title>Frontend Mentor | Age calculator app</title>
+
+    <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+    <style>
+      .attribution {
+        font-size: 11px;
+        text-align: center;
+      }
+      .attribution a {
+        color: hsl(228, 45%, 44%);
+      }
+      @font-face {
+        font-family: "Poppins";
+        src: url("./assets/fonts/Poppins-Regular.tff");
+        src: url("./assets/fonts/Poppins-Regular.tff") format("tff");
+      }
+    </style>
+  </head>
+  <body class="bg-gray-300 font-[Poppins]">
+    <div
+      class="bg-white w-[95%] md:w-[65%] mx-auto mt-[10vh] pb-[5vh] mb-3 p-5 rounded-l-xl rounded-tr-xl rounded-br-[3rem]"
+    >
+      <div class="flex space-x-3 md:w-[70%]">
+        <div class="flex flex-col w-[30%]">
+          <label
+            class="uppercase text-xs text-gray-500 font-bold tracking-widest"
+            >Day</label
+          >
+          <input
+            id="dayInput"
+            placeholder="DD"
+            type="number"
+            class="border outline-none rounded-md pl-4 py-2 font-bold focus:border-purple-400"
+          />
+          <div class="text-rose-400 text-xs italic" id="day-error"></div>
+        </div>
+        <div class="flex flex-col w-[30%]">
+          <label
+            class="uppercase text-xs text-gray-500 font-bold tracking-widest"
+            >Month</label
+          >
+          <input
+            id="monthInput"
+            placeholder="MM"
+            type="number"
+            class="border outline-none rounded-md pl-2 py-2 font-bold focus:border-purple-400"
+          />
+          <div class="text-rose-400 text-xs italic" id="month-error"></div>
+        </div>
+        <div class="flex flex-col w-[30%]">
+          <label
+            class="uppercase outline-none text-xs text-gray-500 font-bold tracking-widest"
+            >Year</label
+          >
+          <input
+            id="yearInput"
+            placeholder="YYYY"
+            type="number"
+            class="border outline-none rounded-md pl-2 py-2 font-bold focus:border-purple-400"
+          />
+          <div class="text-rose-400 text-xs italic" id="year-error"></div>
+        </div>
+      </div>
+      <hr class="z-10 mt-[2vh] relative top-[3vh]" />
+      <div
+        id="calculate-btn"
+        class="z-50 relative mx-auto md:mr-1 rounded-[50%] p-3 border w-[50px] h-[50px] bg-purple-600 cursor-pointer flex justify-center items-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="46"
+          height="44"
+          viewBox="0 0 46 44"
+        >
+          <g fill="none" stroke="#FFF" stroke-width="2">
+            <path
+              d="M1 22.019C8.333 21.686 23 25.616 23 44M23 44V0M45 22.019C37.667 21.686 23 25.616 23 44"
+            />
+          </g>
+        </svg>
+      </div>
+      <div class="font-extrabold italic text-5xl md:text-6xl">
+        <span class="text-purple-600" id="yearDisplay">--</span> years
+      </div>
+      <div class="font-extrabold italic text-5xl md:text-6xl">
+        <span class="text-purple-600" id="monthDisplay">--</span> months
+      </div>
+      <div class="font-extrabold italic text-5xl md:text-6xl">
+        <span class="text-purple-600" id="dayDisplay">--</span> days
+      </div>
+    </div>
+    <div class="attribution">
+      Challenge by
+      <a href="https://www.frontendmentor.io?ref=challenge" target="_blank"
+        >Frontend Mentor</a
+      >. Coded by <a href="#">Oghenero Ologe</a>.
+    </div>
+    <script defer>
+      function daysInMonth(month, year) {
+        return new Date(year, month, 0).getDate();
+      }
+
+      function reset(error, field) {
+        error.textContent = "";
+        field.classList.remove("border-rose-400");
+      }
+
+      function validate() {
+        const today = new Date();
+        const thisYear = today.getFullYear();
+        const thisMonth = today.getMonth() + 1;
+        const thisDay = today.getDate();
+        const dayField = document.getElementById("dayInput");
+        const monthField = document.getElementById("monthInput");
+        const yearField = document.getElementById("yearInput");
+        const dayError = document.getElementById("day-error");
+        const monthError = document.getElementById("month-error");
+        const yearError = document.getElementById("year-error");
+        const yearInput = yearField.value;
+        const monthInput = monthField.value;
+        const dayInput = dayField.value;
+        if (!yearInput || !monthInput || !dayInput) {
+          if (!yearInput) {
+            yearError.textContent = "This field is required";
+            yearField.classList.add("border-rose-400");
+          } else {
+            reset(yearError, yearField);
+          }
+          if (!monthInput) {
+            monthError.textContent = "This field is required";
+            monthField.classList.add("border-rose-400");
+          } else {
+            reset(monthError, monthField);
+          }
+          if (!dayInput) {
+            dayError.textContent = "This field is required";
+            dayField.classList.add("border-rose-400");
+          } else {
+            reset(dayError, dayField);
+          }
+        }
+        reset(yearError, yearField);
+        reset(monthError, monthField);
+        reset(dayError, dayField);
+        if (yearInput > thisYear) {
+          yearError.textContent = "Must be in the past";
+          yearField.classList.add("border-rose-400");
+        } else if (yearInput == thisYear) {
+          if (monthInput > thisMonth && monthInput <= 12) {
+            monthError.textContent = "Must be in the past";
+            monthField.classList.add("border-rose-400");
+          } else if (monthInput == thisMonth) {
+            if (
+              dayInput > thisDay &&
+              dayInput <= daysInMonth(thisMonth, thisYear)
+            ) {
+              dayError.textContent = "Must be in the past";
+              dayField.classList.add("border-rose-400");
+            }
+          }
+        }
+        if (monthInput > 12) {
+          monthError.textContent = "Must be a valid month";
+          monthField.classList.add("border-rose-400");
+        }
+        console.log(daysInMonth(thisMonth, yearInput));
+        console.log(daysInMonth(monthInput, yearInput));
+        if (dayInput > daysInMonth(monthInput, yearInput)) {
+          dayError.textContent = "Must be a valid day";
+          dayField.classList.add("border-rose-400");
+        }
+        if (
+          dayError.textContent !== "" ||
+          monthError.textContent !== "" ||
+          yearError.textContent !== ""
+        )
+          return false;
+        return true;
+      }
+
+      const calculateBtn = document.getElementById("calculate-btn");
+      const dayField = document.getElementById("dayInput");
+      const monthField = document.getElementById("monthInput");
+      const yearField = document.getElementById("yearInput");
+      const dayDisplay = document.getElementById("dayDisplay");
+      const monthDisplay = document.getElementById("monthDisplay");
+      const yearDisplay = document.getElementById("yearDisplay");
+      calculateBtn.addEventListener("click", function () {
+        if (!validate()) return;
+        const today = new Date();
+        const thisYear = today.getFullYear();
+        const thisMonth = today.getMonth() + 1;
+        const thisDay = today.getDate();
+        const yearInput = yearField.value;
+        const monthInput = monthField.value;
+        const dayInput = dayField.value;
+        let year = thisYear - yearInput;
+        let month = 0;
+        let day = 0;
+        if (monthInput > thisMonth) {
+          year--;
+          month = 12 - (monthInput - thisMonth);
+        } else {
+          month = thisMonth - monthInput;
+        }
+
+        if (dayInput > thisDay) {
+          month--;
+          if (month === -1) {
+            month = 11;
+            year--;
+          }
+          const numDaysInMonth = daysInMonth(thisMonth - 1, thisYear);
+          day = numDaysInMonth - dayInput + thisDay;
+        } else if (thisDay > dayInput) {
+          day = thisDay - dayInput;
+        }
+        yearDisplay.textContent = year;
+        monthDisplay.textContent = month;
+        dayDisplay.textContent = day;
+      });
+    </script>
+  </body>
+</html>
